@@ -6,4 +6,8 @@ templates = Jinja2Templates(directory="app/templates")
 
 @router.get("/user/{nome}")
 def show_user(request: Request, nome: str) -> str:
-    return templates.TemplateResponse("index.html", {"request": request, "nome": nome})
+    return templates.TemplateResponse("user.html", {"request": request, "nome": nome})
+
+@router.get("/register")
+def register_page(request: Request) -> str:
+    return templates.TemplateResponse("register.html", {"request": request})

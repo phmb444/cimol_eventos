@@ -1,7 +1,8 @@
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
-from app.views import user_view
-from app.database import engine, Base
+from app.views import views
+from app.controllers import user_controller
+
 
 # Inicializa o app FastAPI
 app = FastAPI()
@@ -10,10 +11,9 @@ app = FastAPI()
 app.mount("/static", StaticFiles(directory="app/static"), name="static")
 
 # Inclui rotas
-app.include_router(user_view.router)
+app.include_router(views.router)
+app.include_router(user_controller.router)
 
-# Cria as tabelas no banco de dados
-Base.metadata.create_all(bind=engine)
 
 @app.get("/")
 async def root():
