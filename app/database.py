@@ -1,28 +1,35 @@
+import psycopg2
+from psycopg2 import sql
 import os
-from sqlalchemy import create_engine
-from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
 
-# Carrega as variáveis de ambiente do arquivo .env
+# Carrega as variáveis do arquivo .env
 load_dotenv()
 
-# URL de conexão com o banco de dados PostgreSQL
+# URL de conexão com o PostgreSQL
 DATABASE_URL = os.getenv("DB_URL")
 
-# Cria o engine para conectar com o PostgreSQL
-engine = create_engine(DATABASE_URL)
-
-# Cria uma fábrica de sessões para interagir com o banco
-SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Classe base para definir os modelos ORM
-Base = declarative_base()
-
-# Função para obter a sessão do banco de dados em cada requisição
-def get_db():
-    db = SessionLocal()
+# Função para executar uma consulta SQL
+def execute_query(query, params=None):
     try:
-        yield db
-    finally:
-        db.close()
+        # Conecta ao banco de dados
+        conn = psycopg2.connect(DATABASE_URL)
+        cur = conn.cursor()
+
+        # Executa a consulta SQL
+        cur.execute(query, params)
+
+        # Se for uma consulta SELECT, fetchall() retorna os resultados
+        if query.strip().lower().startswith("select"):
+            result = cur.fetchall()
+            cur.close()
+            conn.close()
+            return result
+
+        # Commit para comandos como INSERT, UPDATE, DELETE
+        conn.commit()
+        cur.close()
+        conn.close()
+
+    except Exception as e:
+        print(f"Erro: {e}")
