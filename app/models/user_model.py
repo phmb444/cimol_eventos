@@ -1,5 +1,14 @@
 import datetime
+import hashlib
 from app.database import execute_query
+from app.models.utils import encrypt_password, compare_encrypted_passwords
+from cryptography.fernet import Fernet
+from dotenv import load_dotenv
+import os
+load_dotenv()
+SECRET = os.getenv("SECRET")
+
+cipher_suite = Fernet(SECRET)
 
 
 def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
@@ -10,14 +19,18 @@ def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
     result = execute_query(check_query, check_params)
     
     if result[0][0] > 0:
-        raise ValueError("Já existe um usuário com este e-mail ou telefone")
+        return {"msg": "Usuário já existe", "funcionou": False} 
+    
+   
+    # Encrypt the password
+    encrypted_password = encrypt_password(senha)
     
     # Insert the new user
     query = """
     INSERT INTO usuarios (nome, email, telefone, senha, tipo_usuario, cadastro)
     VALUES (%s, %s, %s, %s, 'externo', CURRENT_DATE)
     """
-    params = (nome, email, telefone, senha)
+    params = (nome, email, telefone, encrypted_password)
     
     try:
         execute_query(query, params)
@@ -26,3 +39,45 @@ def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
         print(f"Erro: {e}")
         return {"msg": "Erro ao criar usuário", "funcionou": False}
     
+def generate_session_token(email: str) -> str:
+    encrypted_email = cipher_suite.encrypt(email.encode())
+    return encrypted_email.decode()
+
+def decrypt_session_token(encrypted_email: str) -> str:
+    decrypted_email = cipher_suite.decrypt(encrypted_email.encode())
+    return decrypted_email.decode()
+
+def authenticate_user(email: str, senha: str) -> dict:
+    query = """
+    SELECT nome, email, telefone, senha FROM usuarios WHERE email = %s
+    """
+    result = execute_query(query, (email,))
+    
+    if not result or not compare_encrypted_passwords(result[0][3],senha):  # Verifica a senha criptografada
+        return None
+    
+
+    session_token = generate_session_token(email)
+    
+    return {
+        "nome": result[0][0],
+        "email": result[0][1],
+        "telefone": result[0][2],
+        "session_token": session_token
+    }
+
+def get_user_by_session_token(session_token: str) -> dict:
+    email = decrypt_session_token(session_token)
+    query = """
+    SELECT nome, email, telefone FROM usuarios WHERE email = %s
+    """
+    result = execute_query(query, (email))
+    
+    if not result:
+        return None
+    
+    return {
+        "nome": result[0][0],
+        "email": result[0][1],
+        "telefone": result[0][2]
+    }

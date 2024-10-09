@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from app.views import views
 from app.controllers import user_controller
@@ -17,4 +18,4 @@ app.include_router(user_controller.router)
 
 @app.get("/")
 async def root():
-    return {"message": "Bem-vindo à aplicação FastAPI MVC"}
+    return HTMLResponse(content="<h1>Bem-vindo à aplicação gerenciadora de eventos do cimol</h1>", status_code=200)

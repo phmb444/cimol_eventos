@@ -11,3 +11,7 @@ def show_user(request: Request, nome: str) -> str:
 @router.get("/register")
 def register_page(request: Request) -> str:
     return templates.TemplateResponse("register.html", {"request": request})
+
+@router.get("/login")
+def login_page(request: Request) -> str:
+    return templates.TemplateResponse("login.html", {"request": request})
