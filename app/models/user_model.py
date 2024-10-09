@@ -8,7 +8,7 @@ import os
 load_dotenv()
 SECRET = os.getenv("SECRET")
 
-cipher_suite = Fernet(SECRET)
+cipher_suite = Fernet(b'Ywk56SAgd4vrpeWiFPKIZ__e9jYsTg0c6di9N3OYr5Q=')
 
 
 def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
