@@ -81,3 +81,14 @@ def get_user_by_session_token(session_token: str) -> dict:
         "email": result[0][1],
         "telefone": result[0][2]
     }
+    
+def getUserType(email: str) -> str:
+    query = """
+    SELECT tipo_usuario FROM usuarios WHERE email = %s
+    """
+    result = execute_query(query, (email,))
+    
+    if not result:
+        return None
+    
+    return result[0][0]

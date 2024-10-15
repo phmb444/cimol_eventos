@@ -6,7 +6,7 @@ from app.models.user_model import create_user, authenticate_user, get_user_by_se
 router = APIRouter()
 
 # Rota de criação de usuário (já existente)
-@router.post("/user")
+@router.post("/user", tags=["Usuários"])
 def create_new_user(
     nome: str = Form(...), 
     email: str = Form(...), 
@@ -20,7 +20,7 @@ def create_new_user(
         raise HTTPException(status_code=400, detail=reponse["msg"])
 
 # Adicionando o login com cookies
-@router.post("/login")
+@router.post("/login", tags=["Usuários"])
 def login_user(response: Response, email: str = Form(...), senha: str = Form(...)):
     user = authenticate_user(email, senha)  # Função para verificar as credenciais
     
@@ -29,12 +29,12 @@ def login_user(response: Response, email: str = Form(...), senha: str = Form(...
     
     # Criar um cookie de sessão para o usuário
     session_token = user["session_token"]  # Supomos que a função retorne um token único
-    response.set_cookie(key="session_token", value=session_token)
+    response.set_cookie(key="session_token", value=session_token, expires=604800)  # O cookie expira em 1 hora
     
     return {"msg": "Login bem-sucedido"}
 
 # Rota para verificar se o usuário está autenticado via cookie
-@router.get("/me")
+@router.get("/me", tags=["Usuários"])
 def get_logged_user(session_token: str = Cookie(None)):
     if session_token is None:
         raise HTTPException(status_code=403, detail="Não autenticado")
@@ -48,7 +48,7 @@ def get_logged_user(session_token: str = Cookie(None)):
     return {"username": user["nome"], "email": user["email"], "telefone": user["telefone"]}
 
 # Rota de logout para remover o cookie
-@router.post("/logout")
+@router.post("/logout", tags=["Usuários"])
 def logout_user(response: Response):
     response.delete_cookie(key="session_token")
     return {"msg": "Logout bem-sucedido"}

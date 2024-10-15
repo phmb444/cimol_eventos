@@ -5,7 +5,6 @@ from enum import Enum
 
 class TipoUsuario(str, Enum):
     ORGANIZADOR = "organizador"
-    PALESTRANTE = "palestrante"
     EXTERNO = "externo"
     INTERNO = "interno"
     PROFESSOR = "professor"
@@ -26,15 +25,6 @@ class User(BaseModel):
     telefone: str
     tipo_usuario: TipoUsuario
     cadastro: date
-    
-class Palestrante(User):
-    id_palestrante: int
-    id_usuario: int
-    descricao: str
-    id_foto: int
-    perfil: str
-    tema_apresentacao: str
-    id_evento: int
     
 class Evento(BaseModel):
     id_evento: int
