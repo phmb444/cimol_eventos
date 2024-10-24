@@ -19,17 +19,6 @@ class Evento(BaseModel):
     id_icon: int
     id_banner: int
 
-
-@router.get("/eventos", tags=["Eventos"])
-async def eventos():
-    result = evento_model.get_eventos()
-    return {"eventos": result}
-
-@router.get("/eventos/{id}", tags=["Eventos"])
-async def evento(id: int):
-    result = evento_model.get_evento(id)
-    return result
-
 @router.post("/eventos", tags=["Eventos"])
 async def create_evento(
     nome_evento: str = Form(...),
@@ -51,7 +40,6 @@ async def create_evento(
         organizador, id_icon, id_banner
     )
     return result
-
 
 @router.put("/eventos/{id}", tags=["Eventos"])
 async def update_evento(
@@ -81,4 +69,11 @@ async def delete_evento(id: int):
     result = evento_model.delete_evento(id)
     return result
     result = evento_model.delete_evento(id)
+    return result
+
+@router.post("/eventos/{id}/inscricao", tags=["Eventos"])
+async def inscrever_evento(id: int, session_token: str = Cookie(None)):
+    if session_token is None:
+        raise HTTPException(status_code=403, detail="Não autenticado")
+    result = evento_model.inscrever_evento(id, session_token)
     return result

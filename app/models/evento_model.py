@@ -1,6 +1,7 @@
 from datetime import date, time
 import hashlib
 from app.database import execute_query
+from app.models.user_model import decrypt_session_token
 from app.models.utils import encrypt_password, compare_encrypted_passwords
 from cryptography.fernet import Fernet
 from dotenv import load_dotenv
@@ -112,3 +113,25 @@ def update_evento(id_evento: int, nome_evento: str, descricao: str, data_inicio:
     except Exception as e:
         print(f"Erro: {e}")
         return json.dumps({"msg": "Erro ao atualizar evento"})
+    
+def inscrever_evento(id_evento: int, session_token: str):
+    email = decrypt_session_token(session_token)
+    query = "select id from usuarios where email = %s"
+    params = (email,)
+    result = execute_query(query, params)
+    if not result:
+        return {"msg": "Usuário não encontrado"}
+    id_usuario = result[0][0]
+    query = "select count(*) from inscricoes where id_evento = %s and id_usuario = %s"
+    params = (id_evento, id_usuario)
+    result = execute_query(query, params)
+    if result[0][0] > 0:
+        return {"msg": "Usuário já inscrito"}
+    query = "insert into inscricoes (id_evento, id_usuario, data_inscricao, status) values (%s, %s, CURRENT_TIMESTAMP, 'inscrito')"
+    params = (id_evento, id_usuario)
+    result = execute_query(query, params)
+    return {"msg": "Inscrição realizada com sucesso"}
+
+    
+    
+   

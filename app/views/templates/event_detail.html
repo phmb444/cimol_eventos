@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ evento.name }}</title>
+</head>
+<body>
+    <h1>{{ evento.nome_evento }}</h1>
+    <p>{{ evento.descricao }}</p>
+    <p>Data: {{ evento.data_inicio }} - {{evento.tempo_inicio}}</p>
+    <p>Local: {{ evento.local }}</p>
+    <a href="/eventos">Voltar para todos os eventos</a>
+    <form action="/eventos/{{ evento.id_evento }}/inscricao" method="post">
+        <button type="submit">inscrever-se</button>
+    </form>
+</body>
+</html>

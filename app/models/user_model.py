@@ -10,7 +10,6 @@ SECRET = os.getenv("SECRET")
 
 cipher_suite = Fernet(b'Ywk56SAgd4vrpeWiFPKIZ__e9jYsTg0c6di9N3OYr5Q=')
 
-
 def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
     check_query = """
     SELECT COUNT(*) FROM usuarios WHERE email = %s OR telefone = %s
@@ -20,7 +19,6 @@ def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
     
     if result[0][0] > 0:
         return {"msg": "Usuário já existe", "funcionou": False} 
-    
    
     # Encrypt the password
     encrypted_password = encrypt_password(senha)
@@ -56,7 +54,6 @@ def authenticate_user(email: str, senha: str) -> dict:
     if not result or not compare_encrypted_passwords(result[0][3],senha):  # Verifica a senha criptografada
         return None
     
-
     session_token = generate_session_token(email)
     
     return {
@@ -66,21 +63,27 @@ def authenticate_user(email: str, senha: str) -> dict:
         "session_token": session_token
     }
 
-def get_user_by_session_token(session_token: str) -> dict:
+def get_user_by_session_token(session_token: str):
+    print(f"Received session_token: {session_token}")  # Debugging line
     email = decrypt_session_token(session_token)
+    print(f"Decrypted email: {email}")  # Debugging line
     query = """
     SELECT nome, email, telefone FROM usuarios WHERE email = %s
     """
-    result = execute_query(query, (email))
+    result = execute_query(query, (email,))  # Updated to pass email as a tuple
     
     if not result:
         return None
     
-    return {
+    response = {
         "nome": result[0][0],
         "email": result[0][1],
         "telefone": result[0][2]
     }
+    
+    print(response)
+    
+    return response
     
 def getUserType(email: str) -> str:
     query = """
