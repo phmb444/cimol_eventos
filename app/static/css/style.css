@@ -4,6 +4,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+    font-family: "Poppins", sans-serif;
+    font-weight: 400;
+    font-style: normal;
 }
 
 body {
@@ -15,8 +18,6 @@ body {
     padding-left: 20% ;
     padding-right: 20%;
     padding-top: 1%;
-    font-family: "Poppins", sans-serif;
-    font-style: normal;
 }
 
 h1 {
@@ -95,6 +96,46 @@ input[type="submit"]:hover {
     display: inline-block;
 }
 
-.nav-link{
+.navbar-nav .nav-link {
+    color: white !important;
+}
+
+.dropdown-menu {
+    display: flex;
+    justify-content: center;
+    text-align: center;
+}
+
+.dropdown-item {
+    width: 100%;
+}
+
+.navlink_style {
     color: white;
+    margin-right: 15%;
+}
+
+.banner{
+    background-color: #114e9081;
+    display: flex;
+    justify-content: center;
+
+}
+
+.bannerImg{
+    border-radius: 20px;
+    padding: 1em;
+}
+
+.lastEvenText{
+    font-size: 1em;
+}
+
+.eventosRecentes{
+    display: flex;
+    flex-direction: row;
+}
+
+.event-card{
+    margin: 1em;
 }
