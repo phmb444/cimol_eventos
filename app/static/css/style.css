@@ -194,10 +194,13 @@ input[type="submit"]:hover {
     border-radius: 8px;
     display: flex;                  
     justify-content: center;    
+    margin: 1em;
   }
 
 .galleryPreviewContainer {
     width: 100%;
+    margin: 1em;
+    padding: 1em;
 }
 
 .square-preview {
@@ -207,6 +210,7 @@ input[type="submit"]:hover {
     overflow: hidden;
     background-color: #1A1859;
     border-radius: 8px;
+    margin-bottom: 1em;
 }
 
 .square-preview img {
@@ -222,3 +226,35 @@ input[type="submit"]:hover {
     width: 100%;
     margin: 0;        
 }
+
+.banner-eventos {
+    padding: 20px;                  
+  }
+  
+  .container {
+    display: flex;                 
+    justify-content: space-between; 
+    gap: 20px;                      
+  }
+  
+  .apresentacao {
+    flex: 1;                     
+    text-align: center;        
+  }
+  
+  .galleryPreview {
+    flex: 2;                       
+  }
+  
+  @media (max-width: 768px) {       
+    .container {
+      flex-direction: column;       
+      align-items: center;        
+    }
+  
+    .galleryPreview {
+      display: none;     
+    }
+  }
+  
+  

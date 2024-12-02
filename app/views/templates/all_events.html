@@ -44,13 +44,14 @@
         </div>
     </nav>
     <div class="banner banner-eventos">
-        <div class="apresentacao">
+        <div class="container d-flex flex-column flex-md-row align-items-center">
+          <div class="apresentacao">
             <h3 class="galeriaText">Galeria</h3>
             <a class="btn btn-primary" href="#" role="button">Fique por dentro</a>
-        </div>
-        <div class="galleryPreview">
+          </div>
+          <div class="galleryPreview">
             <div class="galleryPreviewContainer">
-              <div class="row row-cols-2 row-cols-sm-3 row-cols-md-4">
+              <div class="row row-cols-2 row-cols-sm-2 row-cols-md-4">
                 <div class="col">
                   <div class="square-preview">
                     <img src="..." alt="Imagem 1">
@@ -73,8 +74,10 @@
                 </div>
               </div>
             </div>
+          </div>
         </div>
-    </div>
+      </div>
+         
     <div class="container">
         <ul>
             {% for evento in eventos %}
