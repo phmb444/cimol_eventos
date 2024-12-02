@@ -139,3 +139,21 @@ input[type="submit"]:hover {
 .event-card{
     margin: 2.5em;
 }
+
+.square {
+    width: 80%;            
+    margin: 0 auto;         
+    padding-bottom: 80%;    
+    position: relative;
+    background-color: rgb(199, 197, 197);
+    margin-bottom: 1em;
+}
+
+.square img {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%; 
+    height: 100%; 
+    object-fit: cover;  
+}
