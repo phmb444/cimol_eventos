@@ -1,5 +1,7 @@
 from datetime import date, time
 import hashlib
+
+from fastapi.responses import RedirectResponse
 from app.database import execute_query
 from app.models.user_model import decrypt_session_token
 from app.models.utils import encrypt_password, compare_encrypted_passwords
@@ -126,11 +128,29 @@ def inscrever_evento(id_evento: int, session_token: str):
     params = (id_evento, id_usuario)
     result = execute_query(query, params)
     if result[0][0] > 0:
-        return {"msg": "Usuário já inscrito"}
+        query = "DELETE FROM inscricoes WHERE id_evento = %s AND id_usuario = %s"
+        params = (id_evento, id_usuario)
+        execute_query(query, params)
+        return "ok"    
     query = "insert into inscricoes (id_evento, id_usuario, data_inscricao, status) values (%s, %s, CURRENT_TIMESTAMP, 'inscrito')"
     params = (id_evento, id_usuario)
     result = execute_query(query, params)
-    return {"msg": "Inscrição realizada com sucesso"}
+    return "ok"
+
+def ja_inscrito(id_evento: int, session_token: str):
+    email = decrypt_session_token(session_token)
+    query = "select id from usuarios where email = %s"
+    params = (email,)
+    result = execute_query(query, params)
+    if not result:
+        return {"msg": "Usuário não encontrado"}
+    id_usuario = result[0][0]
+    query = "select count(*) from inscricoes where id_evento = %s and id_usuario = %s"
+    params = (id_evento, id_usuario)
+    result = execute_query(query, params)
+    if result[0][0] > 0:
+        return True
+    return False
 
     
     

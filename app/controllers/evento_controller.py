@@ -76,4 +76,4 @@ async def inscrever_evento(id: int, session_token: str = Cookie(None)):
     if session_token is None:
         raise HTTPException(status_code=403, detail="Não autenticado")
     result = evento_model.inscrever_evento(id, session_token)
-    return result
+    return RedirectResponse(url=f"/eventos/{id}", status_code=303)

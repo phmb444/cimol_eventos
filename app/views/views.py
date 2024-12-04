@@ -34,7 +34,16 @@ async def eventos(request: Request):
     return templates.TemplateResponse("all_events.html", {"request": request, "eventos": result})
 
 @router.get("/eventos/{id}", tags=["Eventos"])
-async def evento(request: Request, id: int):
+async def evento(request: Request, id: int, session_token: str = Cookie(None)):
+    ja_inscrito = evento_model.ja_inscrito(id, session_token)
     result = evento_model.get_evento(id)
     print(result)
-    return templates.TemplateResponse("event_detail.html", {"request": request, "evento": result})
+    return templates.TemplateResponse("event_detail.html", {"request": request, "evento": result, "ja_inscrito": ja_inscrito})
+
+@router.get("/home", tags=["Páginas"])
+def home_page(request: Request) -> str:
+    result = evento_model.get_eventos()
+    for i in range(len(result)-1, 3, -1):
+        result.pop(i)
+    print(result)
+    return templates.TemplateResponse("home.html", {"request": request, "eventos": result})

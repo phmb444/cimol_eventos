@@ -19,7 +19,7 @@ def create_new_user(
         user = authenticate_user(email, senha)
         session_token = user["session_token"]
         response.set_cookie(key="session_token", value=session_token)
-        return RedirectResponse(url=f"/user/{user.nome}", status_code=303)
+        return RedirectResponse(url=f"/home", status_code=303)
     else:
         raise HTTPException(status_code=400, detail=reponse["msg"])
 
@@ -33,7 +33,7 @@ def login_user(response: Response, email: str = Form(...), senha: str = Form(...
     session_token = user["session_token"]  # Supomos que a função retorne um token único
     response.set_cookie(key="session_token", value=session_token)  # O cookie expira em 1 hora
     
-    return {"msg": "Login bem-sucedido"}
+    return RedirectResponse(url="/home", status_code=303)
 
 # Rota de logout para remover o cookie
 @router.post("/logout", tags=["Usuários"])

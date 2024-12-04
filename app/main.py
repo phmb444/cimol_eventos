@@ -1,5 +1,5 @@
 from fastapi import FastAPI
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from app.views import views
 from app.controllers import user_controller, evento_controller
@@ -19,4 +19,4 @@ app.include_router(evento_controller.router)
 
 @app.get("/")
 async def root():
-    return HTMLResponse(content="<h1>Bem-vindo à aplicação gerenciadora de eventos do cimol</h1>", status_code=200)
+    return RedirectResponse(url="/login")

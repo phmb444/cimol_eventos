@@ -51,12 +51,14 @@
         <div class="container text-center">
             <div class="row row-cols-1 row-cols-sm-2 row-cols-md-6 listevents">
               <div class="col event-card">
-                <div class="card " style="width: 13rem;">
-                    <img src="../../static/images/infoLogo.png" class="card-img-top" alt="logoInfo">
-                    <div class="card-body">
-                      <p class="card-text">Evento tal tal tal</p>
-                    </div>
-                </div>
+                {% for evento in eventos %}
+                <a href="/eventos/{{evento.id_evento}}" class="card " style="width: 13rem;">
+                  <img src="../../static/images/infoLogo.png" class="card-img-top" alt="logoInfo">
+                  <div class="card-body">
+                    <p class="card-text">{{ evento.nome_evento }}</p>
+                  </div>
+                </a>
+                {% endfor %}
             </div>
         </div>
     </div>
