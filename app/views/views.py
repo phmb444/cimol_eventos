@@ -32,15 +32,23 @@ def get_logged_user(request: Request, session_token: str = Cookie(None)):
 @router.get("/eventos", tags=["Eventos"])
 async def eventos(request: Request, session_token: str = Cookie(None)):
     result = evento_model.get_eventos()
+    gallery = evento_model.get_gallery_four()
     isAdmin = user_model.getUserType(session_token) == "organizador"
-    return templates.TemplateResponse("all_events.html", {"request": request, "eventos": result, "isAdmin": isAdmin})
+    return templates.TemplateResponse("all_events.html", {"request": request, "eventos": result, "isAdmin": isAdmin, "gallery": gallery})
 
 @router.get("/eventos/{id}", tags=["Eventos"])
 async def evento(request: Request, id: int, session_token: str = Cookie(None)):
     ja_inscrito = evento_model.ja_inscrito(id, session_token)
     result = evento_model.get_evento(id)
-    print(result)
-    return templates.TemplateResponse("event_detail.html", {"request": request, "evento": result, "ja_inscrito": ja_inscrito})
+    isAdmin = user_model.getUserType(session_token) == "organizador"
+    return templates.TemplateResponse("event_detail.html", {"request": request, "evento": result, "ja_inscrito": ja_inscrito, "isAdmin": isAdmin})
+
+@router.get("/eventos/{id}/editar", tags=["Eventos"])
+async def editar_evento(request: Request, id: int, session_token: str = Cookie(None)):
+    if user_model.getUserType(session_token) != "organizador":
+        raise HTTPException(status_code=403, detail="Acesso negado")
+    evento = evento_model.get_evento(id)
+    return templates.TemplateResponse("event_edit.html", {"request": request, "evento": evento})
 
 @router.get("/home", tags=["Páginas"])
 def home_page(request: Request) -> str:
@@ -54,4 +62,8 @@ def home_page(request: Request) -> str:
 async def eventos(request: Request, session_token: str = Cookie(None)):
     return templates.TemplateResponse("event_create.html", {"request": request})
 
-
+@router.get("/galeria", tags=["Eventos"])
+async def galeria(request: Request, session_token: str = Cookie(None)):
+    gallery = evento_model.get_gallery()
+    print(gallery)
+    return templates.TemplateResponse("gallery.html", {"request": request, "gallery": gallery})

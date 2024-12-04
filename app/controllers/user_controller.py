@@ -18,8 +18,9 @@ def create_new_user(
     if reponse["funcionou"]:
         user = authenticate_user(email, senha)
         session_token = user["session_token"]
-        response.set_cookie(key="session_token", value=session_token)
-        return RedirectResponse(url=f"/home", status_code=303)
+        redirect = RedirectResponse(url=f"/home", status_code=303)
+        redirect.set_cookie(key="session_token", value=session_token)
+        return redirect
     else:
         raise HTTPException(status_code=400, detail=reponse["msg"])
 
@@ -31,12 +32,18 @@ def login_user(response: Response, email: str = Form(...), senha: str = Form(...
         raise HTTPException(status_code=401, detail="Credenciais inválidas")
     # Criar um cookie de sessão para o usuário
     session_token = user["session_token"]  # Supomos que a função retorne um token único
-    response.set_cookie(key="session_token", value=session_token)  # O cookie expira em 1 hora
-    
-    return RedirectResponse(url="/home", status_code=303)
+    redirect_response = RedirectResponse(url="/home", status_code=303)
+    redirect_response.set_cookie(
+        key="session_token",
+        value=session_token,
+        samesite="Lax"
+    )
+    print(session_token)
+    return redirect_response
 
 # Rota de logout para remover o cookie
-@router.post("/logout", tags=["Usuários"])
+@router.get("/logout", tags=["Usuários"])
 def logout_user(response: Response):
-    response.delete_cookie(key="session_token")
-    return {"msg": "Logout bem-sucedido"}
+    redirecter = RedirectResponse(url="/", status_code=303)
+    redirecter.delete_cookie(key="session_token")
+    return redirecter

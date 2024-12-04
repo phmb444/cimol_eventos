@@ -38,12 +38,10 @@ def create_user(nome: str, email: str, senha: str, telefone: str) -> dict:
         return {"msg": "Erro ao criar usuário", "funcionou": False}
     
 def generate_session_token(email: str) -> str:
-    encrypted_email = cipher_suite.encrypt(email.encode())
-    return encrypted_email.decode()
+    return email
 
 def decrypt_session_token(encrypted_email: str) -> str:
-    decrypted_email = cipher_suite.decrypt(encrypted_email.encode())
-    return decrypted_email.decode()
+    return encrypted_email
 
 def authenticate_user(email: str, senha: str) -> dict:
     query = """
@@ -64,6 +62,10 @@ def authenticate_user(email: str, senha: str) -> dict:
     }
 
 def get_user_by_session_token(session_token: str):
+    if not session_token:
+        print("No session token provided")  # Debugging line
+        return None
+    
     print(f"Received session_token: {session_token}")  # Debugging line
     email = decrypt_session_token(session_token)
     print(f"Decrypted email: {email}")  # Debugging line

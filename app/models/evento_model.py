@@ -15,6 +15,14 @@ SECRET = os.getenv("SECRET")
 
 cipher_suite = Fernet(b'Ywk56SAgd4vrpeWiFPKIZ__e9jYsTg0c6di9N3OYr5Q=')
 
+def get_user_id_by_email(email: str):
+    query = "SELECT id FROM usuarios WHERE email = %s"
+    params = (email,)
+    result = execute_query(query, params)
+    if not result:
+        return None
+    return result[0][0]
+
 def get_eventos():
     query = """
     SELECT e.*, COUNT(i.id_inscricao) as inscritos FROM eventos e
@@ -78,44 +86,45 @@ def get_evento(id_evento: int):
     
     return evento
 
-def create_evento(nome_evento: str, descricao: str, data_inicio: date, tempo_inicio:time, data_fim:date, tempo_fim:time, local: str, vagas: int, aberto: bool, organizador: int, id_icon: int, id_banner: int):
+def create_evento(nome_evento: str, descricao: str, data_inicio: date, tempo_inicio:time, data_fim:date, tempo_fim:time, local: str, vagas: int, aberto: bool, organizador: int, banner_path: str, icon_path: str):
     query = """
     INSERT INTO eventos (nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, data_cadastro, organizador, id_icon, id_banner)
     VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, CURRENT_TIMESTAMP, %s, %s, %s)
     """
-    params = (nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, organizador, id_icon, id_banner)
+    params = (nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, organizador, icon_path, banner_path)
     try:
         execute_query(query, params)
-        return {"msg": "Evento criado com sucesso"}
+        return None
     except Exception as e:
         print(f"Erro: {e}")
         return {"msg": "Erro ao criar evento"}
     
 def delete_evento(id_evento: int):
-    query = """
-    DELETE FROM eventos WHERE id_evento = %s
-    """
-    params = (id_evento,)
     try:
-        execute_query(query, params)
-        return {"msg": "Evento deletado com sucesso"}
+        # Delete all inscriptions related to the event
+        query_inscricoes = "DELETE FROM inscricoes WHERE id_evento = %s"
+        params_inscricoes = (id_evento,)
+        execute_query(query_inscricoes, params_inscricoes)
+        
+        # Delete the event
+        query_evento = "DELETE FROM eventos WHERE id_evento = %s"
+        params_evento = (id_evento,)
+        execute_query(query_evento, params_evento)
+        
+        return "ok"
     except Exception as e:
         print(f"Erro: {e}")
-        return {"msg": "Erro ao deletar evento"}
+        return "not ok"
     
-def update_evento(id_evento: int, nome_evento: str, descricao: str, data_inicio: date, tempo_inicio: time, data_fim: date, tempo_fim: time, local: str, vagas: int, aberto: bool, organizador: int, id_icon: int, id_banner: int):
+def update_evento(id_evento, nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, organizador, banner_path, icon_path):
     query = """
-    UPDATE eventos SET nome_evento = %s, descricao = %s, data_inicio = %s, tempo_inicio = %s, data_fim = %s, tempo_fim = %s, local = %s, vagas = %s, aberto = %s, organizador = %s, id_icon = %s, id_banner = %s
-    WHERE id_evento = %s
+    UPDATE eventos SET nome_evento=%s, descricao=%s, data_inicio=%s, tempo_inicio=%s,
+    data_fim=%s, tempo_fim=%s, local=%s, vagas=%s, aberto=%s, organizador=%s,
+    id_icon=%s, id_banner=%s WHERE id_evento=%s
     """
-    params = (nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, organizador, id_icon, id_banner, id_evento)
-    try:
-        execute_query(query, params)
-        return json.dumps({"msg": "Evento atualizado com sucesso"})
-    except Exception as e:
-        print(f"Erro: {e}")
-        return json.dumps({"msg": "Erro ao atualizar evento"})
-    
+    params = (nome_evento, descricao, data_inicio, tempo_inicio, data_fim, tempo_fim, local, vagas, aberto, organizador, icon_path, banner_path, id_evento)
+    execute_query(query, params)
+
 def inscrever_evento(id_evento: int, session_token: str):
     email = decrypt_session_token(session_token)
     query = "select id from usuarios where email = %s"
@@ -151,8 +160,6 @@ def ja_inscrito(id_evento: int, session_token: str):
     if result[0][0] > 0:
         return True
     return False
-
-## Faça uma função que com base no id de um usuário pegue todos os dados dos eventos em que ele está inscrito
 
 def get_eventos_inscritos(session_token: str):
     email = decrypt_session_token(session_token)
@@ -194,5 +201,36 @@ def get_eventos_inscritos(session_token: str):
         eventos.append(evento)
     
     return eventos
-    
-   
+
+
+def get_gallery():
+    query = "SELECT id_banner, id_icon FROM eventos"
+    RESULT = execute_query(query)
+    if not RESULT:
+        return {"msg": "Nenhum evento encontrado"}
+        
+    gallery = []
+    for row in RESULT:
+        item = {
+            "id_banner": row[0],
+            "id_icon": row[1]
+        }
+        gallery.append(item)
+        
+    return gallery
+
+def get_gallery_four():
+    query = "SELECT id_banner, id_icon FROM eventos"
+    RESULT = execute_query(query)
+    if not RESULT:
+        return {"msg": "Nenhum evento encontrado"}
+        
+    gallery = []
+    for row in RESULT:
+        item = {
+            "id_banner": row[0],
+            "id_icon": row[1]
+        }
+        gallery.append(item)
+        
+    return gallery[:4]

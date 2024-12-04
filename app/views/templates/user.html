@@ -63,6 +63,10 @@
 
       <h4>Eventos Inscrito</h4>
       <div id="event-list">
+        {%if not eventos %}
+        <p>Você não está inscrito em nenhum evento.</p>
+        {%endif%}
+        {%if eventos %}
         {% for evento in eventos %}
         <div class="event-card">
           <h5>{{evento.nome_evento}}</h5>
@@ -80,15 +84,12 @@
             {{evento.local}}
           </p>
           <p>
-            <strong>Vagas restantes:</strong>
-            {{evento.vagas - evento.inscritos}}
-          </p>
-          <p>
             <strong>Aberto ao público externo:</strong>
             {{ 'Sim' if evento.aberto else 'Não' }}
           </p>  
         </div>
         {% endfor %}
+        {%endif%}
       </div>
     </div>
 

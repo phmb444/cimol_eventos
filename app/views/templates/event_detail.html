@@ -47,16 +47,14 @@
   </head>
   <body>
     {% include 'header.html' %}
-    <div class="text-center my-4">
-      <img
-        src="../../static/images/infoLogo.png"
-        alt="Semana da Informática"
-        style="max-height: 50px"
-      />
-    </div>
-
+    <div class="text-center my-4"></div>
+    <img src="{{evento.id_banner}}" alt="" style="width: 100%; height: 200px; object-fit: cover;">
     <div class="event-container">
-      <h5>Descrição do evento</h5>
+      <div class="mb-4">
+      <img src="{{evento.id_icon}}" alt="Semana da Informática" class="img-fluid" style="max-height: 100px;" />
+      </div>
+
+      <h5>{{evento.nome_evento}}</h5>
       <p>
         <!-- Variável fictícia para a descrição -->
         {{evento.descricao}}
@@ -81,13 +79,24 @@
 
       <div class="text-end mt-4">
         <form action="/eventos/{{evento.id_evento}}/inscricao" method="post">
-            {% if ja_inscrito %}
-            <button type="submit" class="btn btn-danger">Desinscrever-me</button>
-            {% else %}
-            <button type="submit" class="btn inscrever-button">Inscrever-me</button>
-            {% endif %}
+          {% if ja_inscrito %}
+          <button type="submit" class="btn btn-danger">Desinscrever-me</button>
+          {% else %}
+          <button type="submit" class="btn inscrever-button">
+            Inscrever-me
+          </button>
+          {% endif %}
         </form>
       </div>
+
+      {% if isAdmin %}
+      <div class="text-end mt-4">
+        <a href="/eventos/{{ evento.id_evento }}/editar" class="btn btn-primary">Editar Evento</a>
+      </div>
+      <div class="text-end mt-4">
+        <a href="/eventos/{{ evento.id_evento }}/deletar" class="btn btn-danger">Apagar Evento</a>
+      </div>
+      {% endif %}
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>

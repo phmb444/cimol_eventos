@@ -40,45 +40,56 @@
         <img src="../../static/images/infoLogo.png" alt="Semana da Informática" style="max-height: 50px;">
     </div>
     <div class="form-container">
-        <form>
+        <form method="post" action="/eventos" enctype="multipart/form-data">
             <div class="mb-3">
-                <label for="description" class="form-label">Descrição</label>
-                <textarea class="form-control" id="description" rows="2" placeholder="Digite a descrição"></textarea>
+                <label for="nome_evento" class="form-label">Nome do Evento</label>
+                <input type="text" class="form-control" id="nome_evento" name="nome_evento" placeholder="Digite o nome do evento">
+            </div>
+            <div class="mb-3">
+                <label for="descricao" class="form-label">Descrição</label>
+                <textarea class="form-control" id="descricao" name="descricao" rows="2" placeholder="Digite a descrição"></textarea>
             </div>
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="start_date" class="form-label">Data de Início</label>
-                    <input type="date" class="form-control" id="start_date">
+                    <label for="data_inicio" class="form-label">Data de Início</label>
+                    <input type="date" class="form-control" id="data_inicio" name="data_inicio">
                 </div>
                 <div class="col-md-6">
-                    <label for="start_time" class="form-label">Hora de Início</label>
-                    <input type="time" class="form-control" id="start_time">
-                </div>
-            </div>
-
-            <div class="row g-3 mt-3">
-                <div class="col-md-6">
-                    <label for="end_date" class="form-label">Data de Término</label>
-                    <input type="date" class="form-control" id="end_date">
-                </div>
-                <div class="col-md-6">
-                    <label for="end_time" class="form-label">Hora de Término</label>
-                    <input type="time" class="form-control" id="end_time">
+                    <label for="tempo_inicio" class="form-label">Hora de Início</label>
+                    <input type="time" class="form-control" id="tempo_inicio" name="tempo_inicio">
                 </div>
             </div>
 
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label for="location" class="form-label">Localização</label>
-                    <input type="text" class="form-control" id="location" placeholder="Digite a localização">
+                    <label for="data_fim" class="form-label">Data de Término</label>
+                    <input type="date" class="form-control" id="data_fim" name="data_fim">
                 </div>
                 <div class="col-md-6">
-                    <label for="audience" class="form-label">Aberto ao publico?</label>
-                    <select class="form-select" id="audience">
+                    <label for="tempo_fim" class="form-label">Hora de Término</label>
+                    <input type="time" class="form-control" id="tempo_fim" name="tempo_fim">
+                </div>
+            </div>
+
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="local" class="form-label">Localização</label>
+                    <input type="text" class="form-control" id="local" name="local" placeholder="Digite a localização">
+                </div>
+                <div class="col-md-6">
+                    <label for="vagas" class="form-label">Vagas</label>
+                    <input type="number" class="form-control" id="vagas" name="vagas" placeholder="Digite o número de vagas">
+                </div>
+            </div>
+
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="aberto" class="form-label">Aberto ao público?</label>
+                    <select class="form-select" id="aberto" name="aberto">
                         <option selected>Selecione...</option>
-                        <option value="1">Sim</option>
-                        <option value="0">Não</option>
+                        <option value="true">Sim</option>
+                        <option value="false">Não</option>
                     </select>
                 </div>
             </div>
@@ -86,11 +97,11 @@
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
                     <label for="banner" class="form-label">Banner</label>
-                    <input type="file" class="form-control" id="banner" accept="image/*">
+                    <input type="file" class="form-control" id="banner" name="banner" accept="image/*">
                 </div>
                 <div class="col-md-6">
                     <label for="icon" class="form-label">Ícone</label>
-                    <input type="file" class="form-control" id="icon" accept="image/*">
+                    <input type="file" class="form-control" id="icon" name="icon" accept="image/*">
                 </div>
             </div>
 
