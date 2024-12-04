@@ -152,6 +152,47 @@ def ja_inscrito(id_evento: int, session_token: str):
         return True
     return False
 
+## Faça uma função que com base no id de um usuário pegue todos os dados dos eventos em que ele está inscrito
+
+def get_eventos_inscritos(session_token: str):
+    email = decrypt_session_token(session_token)
+    query = "SELECT id FROM usuarios WHERE email = %s"
+    params = (email,)
+    result = execute_query(query, params)
+    if not result:
+        return {"msg": "Usuário não encontrado"}
+    id_usuario = result[0][0]
     
+    query = """
+    SELECT e.*, COUNT(i.id_inscricao) as inscritos FROM eventos e
+    LEFT JOIN inscricoes i ON e.id_evento = i.id_evento WHERE i.id_usuario = %s GROUP BY e.id_evento ORDER BY e.data_inicio DESC 
+    """
+    params = (id_usuario,)
+    RESULT = execute_query(query, params)
+    if not RESULT:
+        return {"msg": "Nenhum evento encontrado"}
+    
+    eventos = []
+    for row in RESULT:
+        evento = {
+            "id_evento": row[0],
+            "nome_evento": row[1],
+            "descricao": row[2],
+            "data_inicio": row[3],
+            "tempo_inicio": row[4],
+            "data_fim": row[5],
+            "tempo_fim": row[6],
+            "local": row[7],
+            "vagas": row[8],
+            "aberto": row[9],
+            "data_cadastro": row[10],
+            "organizador": row[11],
+            "id_icon": row[12],
+            "id_banner": row[13],
+            "inscritos": row[14]
+        }
+        eventos.append(evento)
+    
+    return eventos
     
    

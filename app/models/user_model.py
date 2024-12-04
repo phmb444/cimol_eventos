@@ -85,7 +85,8 @@ def get_user_by_session_token(session_token: str):
     
     return response
     
-def getUserType(email: str) -> str:
+def getUserType(session_token: str) -> str:
+    email = decrypt_session_token(session_token)
     query = """
     SELECT tipo_usuario FROM usuarios WHERE email = %s
     """

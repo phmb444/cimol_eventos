@@ -1,94 +1,97 @@
-user.html
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" type="text/css" href="../../static/css/style.css" media="screen">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" />
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      type="text/css"
+      href="../../static/css/style.css"
+      media="screen"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+    />
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      crossorigin="anonymous"
+    ></script>
     <title>User</title>
     <style>
       .header {
-          background-color: #1a237e;
-          color: white;
-          padding: 20px;
-          text-align: center;
+        background-color: #1a237e;
+        color: white;
+        padding: 20px;
+        text-align: center;
       }
 
       .profile-container {
-          margin: 30px auto;
-          max-width: 800px;
-          padding: 20px;
-          background: #f5f5f5;
-          border-radius: 8px;
-          box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        margin: 30px auto;
+        max-width: 800px;
+        padding: 20px;
+        background: #f5f5f5;
+        border-radius: 8px;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
       }
 
       .event-card {
-          background: #e8f5e9;
-          border: 1px solid #c8e6c9;
-          border-radius: 8px;
-          padding: 15px;
-          margin-bottom: 15px;
+        background: #e8f5e9;
+        border: 1px solid #c8e6c9;
+        border-radius: 8px;
+        padding: 15px;
+        margin-bottom: 15px;
       }
 
       .header .logo {
-          max-height: 50px;
+        max-height: 50px;
       }
-  </style>
-</head>
-<body>
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container-fluid">
-            <a class="navbar-brand navlink_style" href="#">
-                <img src="../../static/images/cimolLogo.png" alt="Logo" class="d-inline-block align-text-top" width="25%" height="auto">
-            </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="./home.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./all_events.html">Eventos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./gallery.html">Galeria</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contatos</a>
-              </li>
-            </ul>
-          </div>
-        </div>
-    </nav>
+    </style>
+  </head>
+  <body>
+    {% include 'header.html' %}
     <div class="profile-container">
       <h4>Informações do Usuário</h4>
       <ul class="list-group mb-4">
-          <li class="list-group-item"><strong>Nome:</strong> {{nomeCompleto}}</li>
-          <li class="list-group-item"><strong>E-mail:</strong> {{email}}</li>
-          <li class="list-group-item"><strong>Curso:</strong> {{curso}}</li>
-          <li class="list-group-item"><strong>Matrícula:</strong> {{matricula}}</li>
+        <li class="list-group-item"><strong>Nome:</strong> {{user.nome}}</li>
+        <li class="list-group-item"><strong>E-mail:</strong> {{user.email}}</li>
+        <li class="list-group-item">
+          <strong>Telefone:</strong> {{user.telefone}}
+        </li>
       </ul>
 
-      <h4>Eventos Inscritos</h4>
+      <h4>Eventos Inscrito</h4>
       <div id="event-list">
-          <!-- Exemplo de evento inscrito -->
-          <div class="event-card">
-              <h5>{{nomeEvento}}</h5>
-              <p><strong>Descrição:</strong> {{descricaoEvento}}</p>
-              <p><strong>Data:</strong> {{dataEvento}}</p>
-              <p><strong>Horário:</strong> {{horarioEvento}}</p>
-              <p><strong>Localização:</strong> {{localizacaoEvento}}</p>
-          </div>
-          <!-- Repita o bloco acima para cada evento inscrito -->
+        {% for evento in eventos %}
+        <div class="event-card">
+          <h5>{{evento.nome_evento}}</h5>
+          <p>
+        
+            {{evento.descricao}}
+          </p>
+          <p>
+            <strong>Dia/horario:</strong>
+            {{evento.data_inicio}}, {{evento.tempo_inicio}} -
+            {{evento.data_fim}}, {{evento.tempo_fim}}
+          </p>
+          <p>
+            <strong>Localização:</strong>
+            {{evento.local}}
+          </p>
+          <p>
+            <strong>Vagas restantes:</strong>
+            {{evento.vagas - evento.inscritos}}
+          </p>
+          <p>
+            <strong>Aberto ao público externo:</strong>
+            {{ 'Sim' if evento.aberto else 'Não' }}
+          </p>  
+        </div>
+        {% endfor %}
       </div>
-  </div>
+    </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
 </html>

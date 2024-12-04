@@ -35,40 +35,7 @@
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg ">
-        <div class="container-fluid">
-            <a class="navbar-brand navlink_style" href="#">
-                <img src="../../static/images/cimolLogo.png" alt="Logo" class="d-inline-block align-text-top" width="25%" height="auto">
-            </a>
-          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-          </button>
-          <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-              <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="./home.html">Home</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="./all_events.html">Eventos</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Galeria</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Contatos</a>
-              </li>
-            </ul>
-            <div class="d-flex navlink_style nav-item dropdown" role="search">
-                <a class="nav-link dropdown-toggle " href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Perfil
-                </a>
-                <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="./user.html">Ver perfil</a></li>
-                </ul>
-            </div>
-          </div>
-        </div>
-    </nav>
+    {% include 'header.html' %}
     <div class="text-center my-4">
         <img src="../../static/images/infoLogo.png" alt="Semana da Informática" style="max-height: 50px;">
     </div>
@@ -81,34 +48,49 @@
 
             <div class="row g-3">
                 <div class="col-md-6">
-                    <label for="day" class="form-label">Dia</label>
-                    <input type="date" class="form-control" id="day">
+                    <label for="start_date" class="form-label">Data de Início</label>
+                    <input type="date" class="form-control" id="start_date">
                 </div>
                 <div class="col-md-6">
-                    <label for="location" class="form-label">Localização</label>
-                    <input type="text" class="form-control" id="location" placeholder="Digite a localização">
+                    <label for="start_time" class="form-label">Hora de Início</label>
+                    <input type="time" class="form-control" id="start_time">
                 </div>
             </div>
 
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label for="time" class="form-label">Horário</label>
-                    <input type="time" class="form-control" id="time">
+                    <label for="end_date" class="form-label">Data de Término</label>
+                    <input type="date" class="form-control" id="end_date">
                 </div>
                 <div class="col-md-6">
-                    <label for="audience" class="form-label">Público alvo</label>
+                    <label for="end_time" class="form-label">Hora de Término</label>
+                    <input type="time" class="form-control" id="end_time">
+                </div>
+            </div>
+
+            <div class="row g-3 mt-3">
+                <div class="col-md-6">
+                    <label for="location" class="form-label">Localização</label>
+                    <input type="text" class="form-control" id="location" placeholder="Digite a localização">
+                </div>
+                <div class="col-md-6">
+                    <label for="audience" class="form-label">Aberto ao publico?</label>
                     <select class="form-select" id="audience">
                         <option selected>Selecione...</option>
-                        <option value="1">Estudantes</option>
-                        <option value="2">Profissionais</option>
+                        <option value="1">Sim</option>
+                        <option value="0">Não</option>
                     </select>
                 </div>
             </div>
 
             <div class="row g-3 mt-3">
                 <div class="col-md-6">
-                    <label for="seats" class="form-label">Número de vagas</label>
-                    <input type="number" class="form-control" id="seats" min="0" placeholder="Digite o número de vagas">
+                    <label for="banner" class="form-label">Banner</label>
+                    <input type="file" class="form-control" id="banner" accept="image/*">
+                </div>
+                <div class="col-md-6">
+                    <label for="icon" class="form-label">Ícone</label>
+                    <input type="file" class="form-control" id="icon" accept="image/*">
                 </div>
             </div>
 
