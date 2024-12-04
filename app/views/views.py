@@ -67,3 +67,7 @@ async def galeria(request: Request, session_token: str = Cookie(None)):
     gallery = evento_model.get_gallery()
     print(gallery)
     return templates.TemplateResponse("gallery.html", {"request": request, "gallery": gallery})
+
+@router.get("/contato" , tags=["Páginas"])
+def contato_page(request: Request) -> str:
+    return templates.TemplateResponse("contato.html", {"request": request})
